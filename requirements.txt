@@ -2,3 +2,10 @@ fastapi
 uvicorn
 python-multipart
 bcsfe-wrapper-python==0.1.19
+requests
+pyyaml
+colored
+python-dateutil
+pyjwt
+beautifulsoup4
+cryptography
