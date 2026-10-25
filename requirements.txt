@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+python-multipart
+bcsfe-wrapper-python==0.1.19
