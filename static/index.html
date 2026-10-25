@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세이브 에디터</title>
+</head>
+<body>
+<h3>세이브 에디터</h3>
+<p>1. 세이브 파일과 게임 버전을 넣고 업로드하세요.</p>
+<input type="file" id="f"><br>
+<input id="gv" placeholder="게임 버전 (예: 14.x.x)">
+<button onclick="up()">업로드</button>
+
+<div id="ed" hidden>
+  <hr>
+  고양이캔 <input id="cf" type="number">
+  <button onclick="setv('catfood','cf')">적용</button><br><br>
+  <button onclick="act('unlock_all_cats')">모든 캐릭터 획득</button>
+  <button onclick="act('true_form_all_cats')">전부 진화</button><br><br>
+  <a id="dl">세이브 다운로드</a>
+</div>
+
+<script>
+let sid;
+async function up() {
+  if (!f.files[0]) return alert("파일을 선택하세요");
+  const fd = new FormData();
+  fd.append("file", f.files[0]);
+  fd.append("gv", gv.value);
+  const r = await fetch("/api/upload", { method: "POST", body: fd });
+  if (!r.ok) return alert((await r.json()).detail);
+  sid = (await r.json()).session_id;
+  ed.hidden = false;
+  dl.href = `/api/${sid}/download`;
+}
+const post = (u, b) => fetch(u, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: b && JSON.stringify(b)
+});
+const setv = (k, id) =>
+  post(`/api/${sid}/set/${k}`, { value: +document.getElementById(id).value })
+    .then(() => alert("완료"));
+const act = n => post(`/api/${sid}/action/${n}`).then(() => alert("완료"));
+</script>
+</body>
+</html>
